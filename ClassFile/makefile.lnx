@@ -1,0 +1,36 @@
+#/************************************************
+#* File: makefile.
+#* Desc: Building definitions for the Plzen RunTime.
+
+PROJECT= ClassFile
+
+include $(AKRAPROJ)/geneMake.lnx
+
+
+# Plzen level 1 is implied (Java).
+# level 2 is FSM.
+# level 3 is SQL.
+# level 2_2 is Real-Time (needs 2 to work).
+PLZEN_LEVELS= -DPLZEN_LEVEL_2 
+
+
+# Debugs: -DDBGLEVEL_1 -DDBGLEVEL_2 -DDBGLEVEL_3 -DDBGLEVEL_MATH -DDEBUG_MEMORY
+DEBUG_LEVELS= -DDBGLEVEL_1 -DDBGLEVEL_3
+CFLAGS= -g $(PLZEN_LEVELS) $(DEBUG_LEVELS) -DSYSV -DPOSIXTHREAD -D_REENTRANT
+INC:= $(INC) -I$(MFRPLZEN)/include
+
+
+CPPSRCS= classFileObject.cpp \
+	filePath.cpp \
+	zipStream.cpp
+
+
+all: $(STATNAMELIB)
+
+
+$(STATNAMELIB): $(OBJS)
+	( cd $(OBJ_PATH) &&  \
+	    $(AR) cru $@ $(OBJS) && \
+	    $(RANLIB) $@ \
+	)
+
